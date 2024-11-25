@@ -5,8 +5,6 @@ class NumericalIntegration
 {
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.GetEncoding(1251);
-        // Задаем функцию интегрирования
         Func<double, double> function = x => Math.Sin(x); // Пример функции f(x) = sin(x)
 
         // Устанавливаем пределы интегрирования
@@ -16,32 +14,38 @@ class NumericalIntegration
         // Задаем желаемую точность
         double epsilon = 1e-6;
 
+        // Количество разбиений
+        int n = 8; // Например, 8 разбиений
+
         // Вычисляем интеграл с использованием различных методов
-        ComputeIntegral("Левых прямоугольников", LeftRectangle, function, a, b, epsilon);
-        ComputeIntegral("Правых прямоугольников", RightRectangle, function, a, b, epsilon);
-        ComputeIntegral("Центральных прямоугольников", CentralRectangle, function, a, b, epsilon);
-        ComputeIntegral("Трапеций", Trapezoidal, function, a, b, epsilon);
-        ComputeIntegral("Симпсона", Simpson, function, a, b, epsilon);
-        ComputeIntegral("Симпсона 3/8", Simpson38, function, a, b, epsilon);
-        ComputeIntegral("Гаусса 3-го порядка", Gaussian3, function, a, b, epsilon);
-        ComputeIntegral("Гаусса 4-го порядка", Gaussian4, function, a, b, epsilon);
+        ComputeIntegral("Левых прямоугольников", LeftRectangle, function, a, b, n);
+        ComputeIntegral("Правых прямоугольников", RightRectangle, function, a, b, n);
+        ComputeIntegral("Центральных прямоугольников", CentralRectangle, function, a, b, n);
+        ComputeIntegral("Трапеций", Trapezoidal, function, a, b, n);
+        ComputeIntegral("Симпсона", Simpson, function, a, b, n);
+        ComputeIntegral("Симпсона 3/8", Simpson38, function, a, b, n);
+        ComputeIntegral("Гаусса 3-го порядка", Gaussian3, function, a, b, n);
+        ComputeIntegral("Гаусса 4-го порядка", Gaussian4, function, a, b, n);
     }
 
     static void ComputeIntegral(string methodName, Func<Func<double, double>, double, double, int, double> method,
-                                 Func<double, double> function, double a, double b, double epsilon)
+                             Func<double, double> function, double a, double b, int n)
     {
-        double result;
-        int n = 1;
+        double result = 0;
+        double intervalWidth = (b - a) / n;
 
-        // Итерируем пока не достигнем необходимой точности
-        do
+        // Суммируем результаты для каждого подынтервала
+        for (int i = 0; i < n; i++)
         {
-            result = method(function, a, b, n);
-            n *= 2; // Увеличиваем количество разбиений
-        } while (Math.Abs(method(function, a, b, n) - result) >= epsilon);
+            double subA = a + i * intervalWidth;
+            double subB = subA + intervalWidth;
 
-        Console.WriteLine($"Метод: {methodName}, Интеграл: {result}, Шаг: {(b - a) / n}, Разбиений: {n / 2}");
+            result += method(function, subA, subB, 1); // Использовать 1 разбиение для методов Гаусса
+        }
+
+        Console.WriteLine($"Метод: {methodName}, Интеграл: {result}, Шаг: {intervalWidth}, Разбиений: {n}");
     }
+
 
     // Методы интегрирования
 
