@@ -5,19 +5,15 @@ class NumericalIntegration
 {
     static void Main(string[] args)
     {
-        Func<double, double> function = x => Math.Sin(x); // Пример функции f(x) = sin(x)
+        Func<double, double> function = x => Math.Sin(x); 
 
-        // Устанавливаем пределы интегрирования
-        double a = 0; // Нижний предел
-        double b = Math.PI; // Верхний предел
-
-        // Задаем желаемую точность
+        double a = 0; 
+        double b = Math.PI; 
         double epsilon = 1e-6;
 
-        // Количество разбиений
-        int n = 8; // Например, 8 разбиений
 
-        // Вычисляем интеграл с использованием различных методов
+        int n = 8;
+
         ComputeIntegral("Левых прямоугольников", LeftRectangle, function, a, b, n);
         ComputeIntegral("Правых прямоугольников", RightRectangle, function, a, b, n);
         ComputeIntegral("Центральных прямоугольников", CentralRectangle, function, a, b, n);
@@ -25,7 +21,7 @@ class NumericalIntegration
         ComputeIntegral("Симпсона", Simpson, function, a, b, n);
         ComputeIntegral("Симпсона 3/8", Simpson38, function, a, b, n);
         ComputeIntegral("Гаусса 3-го порядка", Gaussian3, function, a, b, n);
-        ComputeIntegral("Гаусса 4-го порядка", Gaussian4, function, a, b, n);
+        //ComputeIntegral("Гаусса 4-го порядка", Gaussian4, function, a, b, n);
     }
 
     static void ComputeIntegral(string methodName, Func<Func<double, double>, double, double, int, double> method,
@@ -34,13 +30,12 @@ class NumericalIntegration
         double result = 0;
         double intervalWidth = (b - a) / n;
 
-        // Суммируем результаты для каждого подынтервала
         for (int i = 0; i < n; i++)
         {
             double subA = a + i * intervalWidth;
             double subB = subA + intervalWidth;
 
-            result += method(function, subA, subB, 1); // Использовать 1 разбиение для методов Гаусса
+            result += method(function, subA, subB, 1);
         }
 
         Console.WriteLine($"Метод: {methodName}, Интеграл: {result}, Шаг: {intervalWidth}, Разбиений: {n}");
@@ -71,7 +66,11 @@ class NumericalIntegration
         return sum * h;
     }
 
-    static double CentralRectangle(Func<double, double> f, double a, double b, int n)
+
+
+
+
+    /*static double CentralRectangle(Func<double, double> f, double a, double b, int n)
     {
         double h = (b - a) / n;
         double sum = 0;
@@ -95,7 +94,7 @@ class NumericalIntegration
 
     static double Simpson(Func<double, double> f, double a, double b, int n)
     {
-        if (n % 2 != 0) n++; // Симпсон требует четное количество разбиений
+        if (n % 2 != 0) n++; 
         double h = (b - a) / n;
         double sum = f(a) + f(b);
         for (int i = 1; i < n; i++)
@@ -107,7 +106,7 @@ class NumericalIntegration
 
     static double Simpson38(Func<double, double> f, double a, double b, int n)
     {
-        if (n % 3 != 0) n += (3 - (n % 3)); // Симпсон 3/8 требует кратное 3 количество разбиений
+        if (n % 3 != 0) n += (3 - (n % 3)); 
         double h = (b - a) / n;
         double sum = f(a) + f(b);
         for (int i = 1; i < n; i++)
@@ -122,7 +121,6 @@ class NumericalIntegration
 
     static double Gaussian3(Func<double, double> f, double a, double b, int n)
     {
-        // Применение Гаусса 3-го порядка
         double[] weights = { 5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0 };
         double[] nodes = { -Math.Sqrt(3.0 / 5.0), 0.0, Math.Sqrt(3.0 / 5.0) };
 
@@ -137,8 +135,8 @@ class NumericalIntegration
 
         return sum * h;
     }
-
-    static double Gaussian4(Func<double, double> f, double a, double b, int n)
+*/
+    /*static double Gaussian4(Func<double, double> f, double a, double b, int n)
     {
         // Применение Гаусса 4-го порядка
         double[] weights = { 0.347854845137453857, 0.652145154862546142 };
@@ -154,5 +152,5 @@ class NumericalIntegration
         }
 
         return sum * h;
-    }
+    }*/
 }
